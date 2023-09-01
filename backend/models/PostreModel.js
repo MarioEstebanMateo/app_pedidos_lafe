@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const CartSchema = new mongoose.Schema({
+const PostreSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -13,10 +13,6 @@ const CartSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  quantity: {
-    type: Number,
-    required: true,
-  },
 });
 
-module.exports = mongoose.model("Cart", CartSchema);
+module.exports = mongoose.model("Postre", PostreSchema);
