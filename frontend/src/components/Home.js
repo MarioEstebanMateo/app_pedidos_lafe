@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import swal2 from "sweetalert2";
 
@@ -46,38 +47,59 @@ const Home = () => {
     }
   };
 
-  const imprimiryenviarpedido = async () => {
-    try {
-      const sucursal = document.getElementById("sucursalSelect").value;
-      const helados = document.getElementById("heladosSelect").value;
-      const postres = document.getElementById("postresSelect").value;
-      const bandejas = document.getElementById("bandejasSelect").value;
-      const termicos = document.getElementById("termicosSelect").value;
-
-      const pedido = {
-        sucursal: sucursal,
-        helados: helados,
-        postres: postres,
-        bandejas: bandejas,
-        termicos: termicos,
-      };
-
-      const pedidoenviado = await axios.post(
-        "https://app-pedidos-lafe-api.vercel.app/api/pedidos",
-        pedido
-      );
-      swal2.fire({
-        icon: "success",
-        title: "Pedido Enviado",
-        text: pedidoenviado.data.message,
-      });
-    } catch (error) {
+  const realizarPedido = async (e) => {
+    e.preventDefault();
+    const sucursal = document.getElementById("sucursalSelect").value;
+    const helados = document.querySelectorAll(".heladosContainer");
+    const pedido = [];
+    helados.forEach((helado) => {
+      const quantity = helado.querySelector(".quantityInput input").value;
+      if (quantity > 0) {
+        pedido.push({
+          id: helado.id,
+          quantity: quantity,
+        });
+      }
+    });
+    if (sucursal === "") {
       swal2.fire({
         icon: "error",
         title: "Error",
-        text: error.response.data.message,
+        text: "Selecciona una sucursal",
       });
+    } else if (pedido.length === 0) {
+      swal2.fire({
+        icon: "error",
+        title: "Error",
+        text: "Selecciona al menos un producto",
+      });
+    } else {
+      try {
+        const order = await axios.post(
+          "https://app-pedidos-lafe-api.vercel.app/api/pedidos",
+          {
+            sucursal: sucursal,
+            pedido: pedido,
+          }
+        );
+        window.location.href = `/pedido/${order.data._id}`;
+      } catch (error) {
+        swal2.fire({
+          icon: "error",
+          title: "Error",
+          text: error.response.data.message,
+        });
+      }
     }
+  };
+
+  //when you change the quantity of a product, it will update the quantity in the helados state
+
+  const handleQuantityChange = (e, id) => {
+    const newHelados = [...helados];
+    const index = newHelados.findIndex((helado) => helado._id === id);
+    newHelados[index].quantity = e.target.value;
+    setHelados(newHelados);
   };
 
   useEffect(() => {
@@ -115,8 +137,8 @@ const Home = () => {
         ))}
       </div>
       <div className="buttonContainer text-center">
-        <button className="btn btn-primary onClick={imprimiryenviarpedido}">
-          Enviar
+        <button className="btn btn-primary" onClick={realizarPedido}>
+          Realizar Pedido
         </button>
       </div>
     </div>
