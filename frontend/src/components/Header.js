@@ -2,10 +2,14 @@ import React from "react";
 
 import "./Header.css";
 
+import logo from "../img/logo-lafe.png";
+
 const Header = () => {
   return (
     <div className="container-fluid">
-      <h1>Pedido</h1>
+      <div className="logoLaFe">
+        <img src={logo} alt="logo La Fe" />
+      </div>
     </div>
   );
 };
