@@ -92,6 +92,7 @@ const Home = () => {
         const order = await axios.post(
           "https://app-pedidos-lafe-api.vercel.app/api/pedidos",
           {
+            //pass suscursal and for products pass pedido.title and pedido.quantity
             sucursal: sucursal,
             products: pedido,
           }
