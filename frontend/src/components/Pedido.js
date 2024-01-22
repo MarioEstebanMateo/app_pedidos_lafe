@@ -78,10 +78,10 @@ const Pedido = () => {
             </tr>
           </thead>
           <tbody>
-            {pedido.pedido?.map((item) => (
-              <tr key={item._id}>
-                <td>{item.nombre}</td>
-                <td>{item.cantidad}</td>
+            {pedido.products?.map((product) => (
+              <tr key={product._id}>
+                <td>{product.title}</td>
+                <td>{product.quantity}</td>
               </tr>
             ))}
           </tbody>

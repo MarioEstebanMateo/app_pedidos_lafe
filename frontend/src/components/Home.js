@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import swal2 from "sweetalert2";
 
@@ -11,19 +10,10 @@ const Home = () => {
   const [bandejas, setBandejas] = useState([]);
   const [termicos, setTermicos] = useState([]);
   const [sucursales, setSucursales] = useState([]);
-  const [pedido, setPedido] = useState([]);
 
   useEffect(() => {
     gethelados();
   }, []);
-
-  useEffect(() => {
-    emptyPedido();
-  }, []);
-
-  const emptyPedido = () => {
-    setPedido([]);
-  };
 
   const gethelados = async () => {
     try {
@@ -67,20 +57,21 @@ const Home = () => {
 
     const productos = document.querySelectorAll(".heladosContainer");
 
+    const newPedido = [];
+
     productos.forEach((producto) => {
       const title = producto.querySelector(".productoTitle p").textContent;
       const quantity = producto.querySelector(".quantityInput input").value;
-      let pedido = [];
       if (quantity > 0) {
-        pedido.push({
+        let product = {
           title: title,
           quantity: quantity,
-        });
-        console.log(pedido);
+        };
+        console.log(product);
+        newPedido.push(product);
       }
-
-      setPedido(pedido);
     });
+
     if (sucursal === "") {
       swal2.fire({
         icon: "error",
@@ -92,11 +83,11 @@ const Home = () => {
         const order = await axios.post(
           "https://app-pedidos-lafe-api.vercel.app/api/pedidos",
           {
-            //pass suscursal and for products pass pedido.title and pedido.quantity
             sucursal: sucursal,
-            products: pedido,
+            products: newPedido, // Use the newPedido array
           }
         );
+        console.log(order);
         window.location.href = `/pedido/${order.data._id}`;
       } catch (error) {
         swal2.fire({
