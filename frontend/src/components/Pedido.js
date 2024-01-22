@@ -29,6 +29,10 @@ const Pedido = () => {
     }
   };
 
+  const enviarEmail = () => {};
+
+  const generarPDF = () => {};
+
   const enviarPedido = async () => {
     swal2
       .fire({
@@ -48,6 +52,8 @@ const Pedido = () => {
                 estado: "Enviado",
               }
             );
+            generarPDF();
+            enviarEmail();
             swal2.fire("Enviado!", "El pedido fue enviado.", "success");
             navigate("/");
           } catch (error) {
@@ -73,8 +79,12 @@ const Pedido = () => {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th scope="col">Producto</th>
-              <th scope="col">Cantidad</th>
+              <th className="col-4" scope="col">
+                Producto
+              </th>
+              <th className="" scope="col">
+                Cantidad
+              </th>
             </tr>
           </thead>
           <tbody>
