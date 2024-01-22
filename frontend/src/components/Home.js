@@ -7,6 +7,7 @@ import "./Home.css";
 const Home = () => {
   const [helados, setHelados] = useState([]);
   const [postres, setPostres] = useState([]);
+  const [softs, setSofts] = useState([]);
   const [bandejas, setBandejas] = useState([]);
   const [termicos, setTermicos] = useState([]);
   const [sucursales, setSucursales] = useState([]);
@@ -26,6 +27,11 @@ const Home = () => {
         "https://app-pedidos-lafe-api.vercel.app/api/postres"
       );
       setPostres(postres.data);
+
+      const softs = await axios.get(
+        "https://app-pedidos-lafe-api.vercel.app/api/softs"
+      );
+      setSofts(softs.data);
 
       const bandejas = await axios.get(
         "https://app-pedidos-lafe-api.vercel.app/api/bandejas"
@@ -144,6 +150,18 @@ const Home = () => {
           <div className="heladosContainer" key={postre._id}>
             <div className="productoTitle">
               <p>{postre.title}</p>
+            </div>
+            <div className="quantityInput" onChange={handleQuantityChange}>
+              <input type="number" min="0" />
+            </div>
+          </div>
+        ))}
+      </div>
+      <div>
+        {softs.map((soft) => (
+          <div className="heladosContainer" key={soft._id}>
+            <div className="productoTitle">
+              <p>{soft.title}</p>
             </div>
             <div className="quantityInput" onChange={handleQuantityChange}>
               <input type="number" min="0" />
