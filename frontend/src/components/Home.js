@@ -11,6 +11,19 @@ const Home = () => {
   const [bandejas, setBandejas] = useState([]);
   const [termicos, setTermicos] = useState([]);
   const [sucursales, setSucursales] = useState([]);
+  const [pedido, setPedido] = useState([]);
+
+  useEffect(() => {
+    gethelados();
+  }, []);
+
+  useEffect(() => {
+    emptyPedido();
+  }, []);
+
+  const emptyPedido = () => {
+    setPedido([]);
+  };
 
   const gethelados = async () => {
     try {
@@ -49,17 +62,24 @@ const Home = () => {
 
   const realizarPedido = async (e) => {
     e.preventDefault();
+
     const sucursal = document.getElementById("sucursalSelect").value;
-    const helados = document.querySelectorAll(".heladosContainer");
-    const pedido = [];
-    helados.forEach((helado) => {
-      const quantity = helado.querySelector(".quantityInput input").value;
+
+    const productos = document.querySelectorAll(".heladosContainer");
+
+    productos.forEach((producto) => {
+      const title = producto.querySelector(".productoTitle p").textContent;
+      const quantity = producto.querySelector(".quantityInput input").value;
+      let pedido = [];
       if (quantity > 0) {
         pedido.push({
-          id: helado.id,
+          title: title,
           quantity: quantity,
         });
+        console.log(pedido);
       }
+
+      setPedido(pedido);
     });
     if (sucursal === "") {
       swal2.fire({
@@ -67,19 +87,13 @@ const Home = () => {
         title: "Error",
         text: "Selecciona una sucursal",
       });
-    } else if (pedido.length === 0) {
-      swal2.fire({
-        icon: "error",
-        title: "Error",
-        text: "Selecciona al menos un producto",
-      });
     } else {
       try {
         const order = await axios.post(
           "https://app-pedidos-lafe-api.vercel.app/api/pedidos",
           {
             sucursal: sucursal,
-            pedido: pedido,
+            products: pedido,
           }
         );
         window.location.href = `/pedido/${order.data._id}`;
@@ -93,18 +107,12 @@ const Home = () => {
     }
   };
 
-  //when you change the quantity of a product, it will update the quantity in the helados state
-
-  const handleQuantityChange = (e, id) => {
-    const newHelados = [...helados];
-    const index = newHelados.findIndex((helado) => helado._id === id);
-    newHelados[index].quantity = e.target.value;
-    setHelados(newHelados);
+  const handleQuantityChange = (e) => {
+    const quantity = e.target.value;
+    if (quantity < 0) {
+      e.target.value = 0;
+    }
   };
-
-  useEffect(() => {
-    gethelados();
-  }, []);
 
   return (
     <div className="container-fluid">
@@ -130,13 +138,58 @@ const Home = () => {
             <div className="productoTitle">
               <p>{helado.title}</p>
             </div>
-            <div className="quantityInput">
+            <div className="quantityInput" onChange={handleQuantityChange}>
               <input type="number" min="0" />
             </div>
           </div>
         ))}
       </div>
-      <div className="buttonContainer text-center">
+      <div className="categoryTitle">
+        <p>Postres</p>
+      </div>
+      <div>
+        {postres.map((postre) => (
+          <div className="heladosContainer" key={postre._id}>
+            <div className="productoTitle">
+              <p>{postre.title}</p>
+            </div>
+            <div className="quantityInput" onChange={handleQuantityChange}>
+              <input type="number" min="0" />
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="categoryTitle">
+        <p>Bandejas</p>
+      </div>
+      <div>
+        {bandejas.map((bandeja) => (
+          <div className="heladosContainer" key={bandeja._id}>
+            <div className="productoTitle">
+              <p>{bandeja.title}</p>
+            </div>
+            <div className="quantityInput" onChange={handleQuantityChange}>
+              <input type="number" min="0" />
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="categoryTitle">
+        <p>Termicos</p>
+      </div>
+      <div>
+        {termicos.map((termico) => (
+          <div className="heladosContainer" key={termico._id}>
+            <div className="productoTitle">
+              <p>{termico.title}</p>
+            </div>
+            <div className="quantityInput" onChange={handleQuantityChange}>
+              <input type="number" min="0" />
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="buttonContainer text-center mt-4 mb-4">
         <button className="btn btn-primary" onClick={realizarPedido}>
           Realizar Pedido
         </button>

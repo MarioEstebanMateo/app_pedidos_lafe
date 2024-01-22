@@ -69,6 +69,24 @@ const Pedido = () => {
         </p>
         <p>Numero de Pedido: {params.id}</p>
       </div>
+      <div className="pedidoContainer">
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Producto</th>
+              <th scope="col">Cantidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            {pedido.pedido?.map((item) => (
+              <tr key={item._id}>
+                <td>{item.nombre}</td>
+                <td>{item.cantidad}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div className="text-center">
         <button className="btn btn-primary" onClick={enviarPedido}>
           Enviar Pedido

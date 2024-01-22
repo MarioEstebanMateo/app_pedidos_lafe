@@ -6,11 +6,12 @@ import logoWhatsapp from "../img/iconWhatsapp.png";
 
 const Footer = () => {
   return (
-    <div className="container-fluid">
-      <div className="whatsAppIcon">
+    <div className="container-fluid p-0">
+      <div className="whatsAppIcon text-center">
         <a
           href="https://api.whatsapp.com/send?phone=5492477488532"
           target="_blank"
+          rel="noreferrer"
         >
           {" "}
           Tenes alguna duda? Consultanos por WhatsApp!
