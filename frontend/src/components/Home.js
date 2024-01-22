@@ -157,6 +157,9 @@ const Home = () => {
           </div>
         ))}
       </div>
+      <div className="categoryTitle">
+        <p>Soft</p>
+      </div>
       <div>
         {softs.map((soft) => (
           <div className="heladosContainer" key={soft._id}>
